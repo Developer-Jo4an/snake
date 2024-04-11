@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+
+    background-color: #ffffff;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+}
+
+main {
+    display: flex;
+    flex-grow: 1;
+}
+
+.snake {
+    flex-grow: 1;
+}
