@@ -28,27 +28,22 @@ export const AVAILABLE_KEYS = Object.values(ACTIONS)
 
 export const MOVE_LOGIC = {
 	[FORWARD]: function () {
-		this.snakeHead.translateX(-MOVE_SPEED)
+		this.snakeHead.translateX(-MOVE_SPEED);
 
-		this.snakeBodyChunks.forEach((curChunk, i) => {
-			if (i === 0) {
-				curChunk.lookAt(this.snakeHead.position)
+		const snakeParts = [this.snakeHead, ...this.snakeBodyChunks]
 
-				const distance = curChunk.position.distanceTo(this.snakeHead.position)
-				const permittedDistance = curChunk.geometry.parameters.height
+		snakeParts.forEach((curChunk, i, arr) => {
+			if (!i) return
 
-				if (distance > permittedDistance) curChunk.translateZ(distance - permittedDistance)
-				return
-			}
-
-			const previousChunk = this.snakeBodyChunks[i - 1]
+			const previousChunk = arr[i - 1]
 
 			curChunk.lookAt(previousChunk.position)
 
-			const distance = previousChunk.position.distanceTo(curChunk.position)
+			const distance = curChunk.position.distanceTo(previousChunk.position)
 			const permittedDistance = curChunk.geometry.parameters.height
+			const diff = distance - permittedDistance
 
-			if (distance > permittedDistance) curChunk.translateZ(distance - permittedDistance)
+			if (diff > 0) curChunk.translateZ(diff)
 		})
 	},
 	[LEFT]: function () {
