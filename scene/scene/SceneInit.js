@@ -1,11 +1,34 @@
 import { WebGLRenderer } from 'three'
 import { Snake } from '@/scene/snake/Snake'
 import { Floor } from '@/scene/floor/Floor'
+import {
+	BACK_FOR_FOG,
+	FOG_COLOR,
+	FOG_FAR,
+	FOG_NEAR
+} from '@/scene/constants/fogConstants'
+import {
+	CAMERA_DEFAULT_ASPECT,
+	CAMERA_FAR,
+	CAMERA_FOV,
+	CAMERA_NEAR,
+	CAMERA_X_DISTANCE,
+	CAMERA_Y_DISTANCE
+} from '@/scene/constants/cameraConstants'
 
 export class SceneInit {
+
 	scene = new THREE.Scene()
-	camera = new THREE.PerspectiveCamera(75, 2, 0.1, 100)
+
+	camera = new THREE.PerspectiveCamera(
+		CAMERA_FOV,
+		CAMERA_DEFAULT_ASPECT,
+		CAMERA_NEAR,
+		CAMERA_FAR
+	)
+
 	renderer = new WebGLRenderer()
+
 	snake = new Snake()
 
 	constructor(container) {
@@ -21,14 +44,19 @@ export class SceneInit {
 		this.snake.activate()
 	}
 
+	createFog() {
+		this.scene.fog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR)
+		this.scene.background = new THREE.Color(BACK_FOR_FOG)
+	}
+
 	createFloor() {
 		this.scene.add(new Floor())
 	}
 
 	updateCamera() {
 		this.camera.position.set(
-			this.snake.head.position.x + 20,
-			this.snake.head.position.y + 20,
+			this.snake.head.position.x + CAMERA_X_DISTANCE,
+			this.snake.head.position.y + CAMERA_Y_DISTANCE,
 			this.snake.head.position.z
 		)
 		this.camera.updateWorldMatrix()
@@ -45,15 +73,12 @@ export class SceneInit {
 	mounting() {
 		this.$container.append(this.renderer.domElement)
 
-		this.scene.fog = new THREE.Fog('#ffffff', 25, 50)
-		this.scene.background = new THREE.Color('#ffffff')
-
-		this.camera.aspect = +this.$container.offsetWidth / +this.$container.offsetHeight
-		this.camera.position.set(10, 10, 0)
-
+		this.createFog()
 		this.createFloor()
 		this.addSnake()
+
 		this.resize()
+
 		requestAnimationFrame(this.generalAnimation)
 	}
 

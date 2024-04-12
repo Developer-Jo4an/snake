@@ -1,75 +1,106 @@
-import { ACTIONS, AVAILABLE_KEYS, MOVE_LOGIC } from '@/scene/constants/moveConstants'
+import { ACTIONS, AVAILABLE_KEYS, MOVE_SPEED, ROTATE_SPEED } from '@/scene/constants/moveConstants'
+import { BODY_CHUNK_HEIGHT } from '@/scene/constants/bodyContstants'
 
 export class Controls {
-	actions = ACTIONS
-	availableKeys = AVAILABLE_KEYS
-	activeKeys = []
-	activeActions = []
-	moveLogic = MOVE_LOGIC
 
-	constructor(head, bodyChunks) {
-		this.activateAction = this.activateAction.bind(this)
-		this.deactivateAction = this.deactivateAction.bind(this)
-		this.snakeAnimation = this.snakeAnimation.bind(this)
+    actions = ACTIONS
 
-		this.snakeHead = head
-		this.snakeBodyChunks = bodyChunks
-	}
+    availableKeys = AVAILABLE_KEYS
 
-	snakeAnimation() {
-		this.activeActions.forEach(action => this.moveLogic[action].call(this))
-		requestAnimationFrame(this.snakeAnimation)
-	}
+    activeKeys = []
 
-	getCurrentAction(keyCode) {
-		return Object.entries(this.actions)
-			.reduce((acc, [_, actionObj]) =>
-			actionObj.keys.includes(keyCode) ?
-				actionObj
-				:
-				acc
-		, null)
-	}
+    activeActions = []
 
-	activateAction({ keyCode }) {
-		if (!this.availableKeys.includes(keyCode)) return
+    constructor(head, bodyChunks) {
+        this.activateAction = this.activateAction.bind(this)
+        this.deactivateAction = this.deactivateAction.bind(this)
+        this.snakeAnimation = this.snakeAnimation.bind(this)
 
-		this.activeKeys.push(keyCode)
+        this.snakeHead = head
+        this.snakeBodyChunks = bodyChunks
+    }
 
-		const currentAction = this.getCurrentAction(keyCode)
+    forwardAction() {
+        this.snakeHead.translateX(-MOVE_SPEED)
 
-		if (currentAction.isActive) return
+        const snakeParts = [this.snakeHead, ...this.snakeBodyChunks]
 
-		currentAction.isActive = true
-		this.activeActions.push(currentAction.name)
-	}
+        snakeParts.forEach((curChunk, i, arr) => {
+            if (!i) return
 
-	deactivateAction({ keyCode }) {
-		if (!this.availableKeys.includes(keyCode)) return
+            const previousChunk = arr[i - 1]
 
-		this.activeKeys = this.activeKeys.filter(key => key !== keyCode)
+            curChunk.lookAt(previousChunk.position)
 
-		const currentAction = this.getCurrentAction(keyCode)
+            const distance = curChunk.position.distanceTo(previousChunk.position)
+            const diff = distance - BODY_CHUNK_HEIGHT
 
-		const isWillActive = currentAction.keys.reduce((acc, key) =>
-			this.activeKeys.includes(key) ? true : acc
-		, false)
+            if (diff > 0) curChunk.translateZ(diff)
+        })
+    }
 
-		if (isWillActive) return
+    leftAction() {
+        this.snakeHead.rotation.y += ROTATE_SPEED
+    }
 
-		currentAction.isActive = false
-		this.activeActions = this.activeActions.filter(action => action !== currentAction.name)
-	}
+    rightAction() {
+        this.snakeHead.rotation.y -= ROTATE_SPEED
+    }
 
-	listenEvents() {
-		requestAnimationFrame(this.snakeAnimation)
-		window.addEventListener('keydown', this.activateAction)
-		window.addEventListener('keyup', this.deactivateAction)
-	}
+    snakeAnimation() {
+        this.activeActions.forEach(action => this[`${ action }Action`]?.())
+        requestAnimationFrame(this.snakeAnimation)
+    }
 
-	unlistenEvents() {
-		cancelAnimationFrame(this.snakeAnimation)
-		window.removeEventListener('keydown', this.activateAction)
-		window.removeEventListener('keyup', this.deactivateAction)
-	}
+    getCurrentAction(keyCode) {
+        return Object.entries(this.actions)
+        .reduce((acc, [_, actionObj]) =>
+                actionObj.keys.includes(keyCode) ?
+                    actionObj
+                    :
+                    acc
+            , null)
+    }
+
+    activateAction({ keyCode }) {
+        if (!this.availableKeys.includes(keyCode)) return
+
+        this.activeKeys.push(keyCode)
+
+        const currentAction = this.getCurrentAction(keyCode)
+
+        if (currentAction.isActive) return
+
+        currentAction.isActive = true
+        this.activeActions.push(currentAction.name)
+    }
+
+    deactivateAction({ keyCode }) {
+        if (!this.availableKeys.includes(keyCode)) return
+
+        this.activeKeys = this.activeKeys.filter(key => key !== keyCode)
+
+        const currentAction = this.getCurrentAction(keyCode)
+
+        const isWillActive = currentAction.keys.reduce((acc, key) =>
+                this.activeKeys.includes(key) ? true : acc
+            , false)
+
+        if (isWillActive) return
+
+        currentAction.isActive = false
+        this.activeActions = this.activeActions.filter(action => action !== currentAction.name)
+    }
+
+    listenEvents() {
+        requestAnimationFrame(this.snakeAnimation)
+        window.addEventListener('keydown', this.activateAction)
+        window.addEventListener('keyup', this.deactivateAction)
+    }
+
+    unlistenEvents() {
+        cancelAnimationFrame(this.snakeAnimation)
+        window.removeEventListener('keydown', this.activateAction)
+        window.removeEventListener('keyup', this.deactivateAction)
+    }
 }

@@ -1,8 +1,10 @@
+import { HEAD_COLOR, HEAD_RADIUS } from '@/scene/constants/headConstants'
+
 export class Head extends THREE.Mesh {
     constructor() {
-	    const geometry = new THREE.SphereGeometry(1)
+	    const geometry = new THREE.SphereGeometry(HEAD_RADIUS)
 
-	    const material = new THREE.MeshBasicMaterial({ color: '#ff0000' })
+	    const material = new THREE.MeshBasicMaterial({ color: HEAD_COLOR })
 
 	    super(geometry, material)
 
