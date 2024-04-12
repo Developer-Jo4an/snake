@@ -1,7 +1,7 @@
 import { ASSETS, FLOOR_PATH, SKIN_PATH } from '@/scene/constants/assetsConstants'
 import { loadTexturesHelper } from '@/scene/helpers/loadTexturesHelper'
 
-export const importThree = async () => {
+export const installTHREEPackage = async () => {
     window.THREE = await import('three')
 
 	window.texturesLoader = new THREE.TextureLoader()

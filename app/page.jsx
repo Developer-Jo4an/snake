@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { importThree } from '@/packages/three.package'
+import { installTHREEPackage } from '@/packages/three.package'
 
 const Home = () => {
 	const snakeContainerRef = useRef()
@@ -9,7 +9,7 @@ const Home = () => {
 		let scene = null;
 
 		(async () => {
-			await importThree()
+			await installTHREEPackage()
 
 			const { SceneInit } = await import('@/scene/scene/SceneInit')
 			scene = new SceneInit(snakeContainerRef.current)
@@ -17,9 +17,8 @@ const Home = () => {
 		})()
 
 		return () => {
-			if (scene) {
+			if (scene)
 				scene.deactivate()
-			}
 		}
 	}, [])
 

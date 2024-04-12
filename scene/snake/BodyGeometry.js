@@ -10,10 +10,6 @@ export class BodyGeometry extends THREE.CylinderGeometry {
 
 		instance = null
 
-		this.configure()
-	}
-
-	configure() {
 		this.translate(0, BODY_CHUNK_HEIGHT * 0.5, 0)
 		this.rotateX(Math.PI * 0.5)
 	}

@@ -18,6 +18,7 @@ export class SceneInit {
 	addSnake() {
 		this.scene.add(this.snake.head)
 		this.snake.bodyChunks.forEach(chunk => this.scene.add(chunk))
+		this.snake.activate()
 	}
 
 	createFloor() {

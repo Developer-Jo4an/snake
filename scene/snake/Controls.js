@@ -5,16 +5,15 @@ export class Controls {
 	availableKeys = AVAILABLE_KEYS
 	activeKeys = []
 	activeActions = []
-
 	moveLogic = MOVE_LOGIC
 
-	constructor(snake) {
+	constructor(head, bodyChunks) {
 		this.activateAction = this.activateAction.bind(this)
 		this.deactivateAction = this.deactivateAction.bind(this)
 		this.snakeAnimation = this.snakeAnimation.bind(this)
 
-		this.snakeHead = snake.head
-		this.snakeBodyChunks = snake.bodyChunks
+		this.snakeHead = head
+		this.snakeBodyChunks = bodyChunks
 	}
 
 	snakeAnimation() {

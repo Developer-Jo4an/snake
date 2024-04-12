@@ -28,7 +28,7 @@ export const AVAILABLE_KEYS = Object.values(ACTIONS)
 
 export const MOVE_LOGIC = {
 	[FORWARD]: function () {
-		this.snakeHead.translateX(-MOVE_SPEED);
+		this.snakeHead.translateX(-MOVE_SPEED)
 
 		const snakeParts = [this.snakeHead, ...this.snakeBodyChunks]
 
@@ -50,6 +50,6 @@ export const MOVE_LOGIC = {
 		this.snakeHead.rotation.y += ROTATE_SPEED
 	},
 	[RIGHT]: function () {
-		this.snakeHead.rotation.y += -ROTATE_SPEED
+		this.snakeHead.rotation.y -= ROTATE_SPEED
 	}
 }
