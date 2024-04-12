@@ -7,7 +7,6 @@ export class Snake {
     head
     bodyChunks = []
     controls
-	chunkCounter = BODY_CHUNK_AMOUNT
 
     constructor() {
         this.createHead()
@@ -20,10 +19,8 @@ export class Snake {
     }
 
     createBodyChunks() {
-		let multiple = 0
-        for (let x = 1; x < this.chunkCounter; x++) {
-            this.bodyChunks.push(new Body(x, multiple))
-	        multiple -= BODY_CHUNK_RADIUS * 0.5
+        for (let x = 1; x < BODY_CHUNK_AMOUNT; x++) {
+            this.bodyChunks.push(new Body(x))
         }
     }
 

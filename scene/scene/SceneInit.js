@@ -1,6 +1,6 @@
 import { WebGLRenderer } from 'three'
 import { Snake } from '@/scene/snake/Snake'
-import { ASSETS } from '@/scene/constants/assetsConstants'
+import { Floor } from '@/scene/floor/Floor'
 
 export class SceneInit {
 	scene = new THREE.Scene()
@@ -21,16 +21,7 @@ export class SceneInit {
 	}
 
 	createFloor() {
-		const geometry = new THREE.PlaneGeometry(200, 200)
-		const texture = ASSETS.floor
-		texture.wrapS = THREE.RepeatWrapping
-		texture.wrapT = THREE.RepeatWrapping
-		texture.repeat.set(200, 200)
-		texture.magFilter = THREE.NearestFilter
-		const material = new THREE.MeshBasicMaterial({ map: texture })
-		const floor = new THREE.Mesh(geometry, material)
-		floor.rotation.x = -Math.PI * 0.5
-		this.scene.add(floor)
+		this.scene.add(new Floor())
 	}
 
 	updateCamera() {

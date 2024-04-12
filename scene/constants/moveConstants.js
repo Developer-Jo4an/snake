@@ -1,11 +1,9 @@
-import { BODY_CHUNK_RADIUS } from '@/scene/constants/bodyContstants'
-
 export const FORWARD = 'FORWARD'
 export const LEFT = 'LEFT'
 export const RIGHT = 'RIGHT'
 
-export const MOVE_SPEED = 0.02
-export const ROTATE_SPEED = 0.004
+export const MOVE_SPEED = 0.2
+export const ROTATE_SPEED = 0.02
 
 export const ACTIONS = {
 	[FORWARD]: {
@@ -39,7 +37,7 @@ export const MOVE_LOGIC = {
 				const distance = curChunk.position.distanceTo(this.snakeHead.position)
 				const permittedDistance = curChunk.geometry.parameters.height
 
-				if (distance > permittedDistance) curChunk.translateZ(MOVE_SPEED)
+				if (distance > permittedDistance) curChunk.translateZ(distance - permittedDistance)
 				return
 			}
 
@@ -48,9 +46,9 @@ export const MOVE_LOGIC = {
 			curChunk.lookAt(previousChunk.position)
 
 			const distance = previousChunk.position.distanceTo(curChunk.position)
-			const permittedDistance = curChunk.geometry.parameters.height - BODY_CHUNK_RADIUS * 0.5
+			const permittedDistance = curChunk.geometry.parameters.height
 
-			if (distance > permittedDistance) curChunk.translateZ(MOVE_SPEED)
+			if (distance > permittedDistance) curChunk.translateZ(distance - permittedDistance)
 		})
 	},
 	[LEFT]: function () {
